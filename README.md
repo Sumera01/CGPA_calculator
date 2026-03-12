@@ -1,4 +1,3 @@
-```markdown
 # CGPA Planner ✨
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
@@ -98,9 +97,6 @@ This project is open-source under the **MIT License** — feel free to fork, mod
 Built live with Grok (xAI) — level 10 perfection.
 
 **Star the repo** if it helped you plan your semesters better! ⭐
-
----
-
 **Made for students, by students.**  
 Now go get that 9.0+ CGPA 🔥
 ```
