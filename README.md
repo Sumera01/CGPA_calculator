@@ -12,7 +12,7 @@ Built with pure HTML + CSS + JavaScript — no frameworks, no build step, just o
 ---
 
 ### 🚀 Live Demo
-**[→ Open CGPA Vibe](https://your-username.github.io/cgpa-vibe/)**  
+**[→ Open CGPA Vibe](https://sumera01.github.io/CGPA_calculator/)**  
 *(Replace this line with your actual GitHub Pages link after deployment)*
 
 ---
