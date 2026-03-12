@@ -101,5 +101,4 @@ This project is open-source under the **MIT License** — feel free to fork, mod
 **Star the repo** if it helped you plan your semesters better! ⭐
 **Made for students, by a student.**  
 Now go get that 9.0+ CGPA 🔥
-```
 
