@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGPA • Vibe Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass: rgba(255,255,255,0.09);
+    --border: rgba(255,255,255,0.18);
+    --accent-start: #000000;   /* DARKEST BLUE (replaced maroon) */
+    --accent-end: #010814;     /* Rich dark blue for gradient */
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: linear-gradient(135deg, #0a1625, #1e2a44, #2c4a6e);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    padding: 40px 20px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 1px, transparent 2px),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 1px, transparent 2px),
+                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.07) 1px, transparent 2px);
+    background-size: 120px 120px;
+    animation: twinkle 25s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  @keyframes twinkle {
+    0% { background-position: 0 0; }
+    100% { background-position: 200px 200px; }
+  }
+
+  .container {
+    width: 460px;
+    max-width: 94vw;
+    padding: 32px 28px;
+    border-radius: 28px;
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45), inset 0 0 40px rgba(255,255,255,0.07);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .container:hover { transform: translateY(-6px); }
+
+  h1 {
+    font-size: 2.35rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #fff, #c8d6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .subtitle { text-align: center; font-size: 15px; opacity: 0.75; margin-bottom: 32px; letter-spacing: 0.5px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+
+  .inputBox {
+    background: rgba(255,255,255,0.06);
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .inputBox:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border-color: rgba(11,37,69,0.3);        /* darkest blue */
+  }
+
+  .inputBox label {
+    font-size: 12.5px;
+    opacity: 0.75;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .control input {
+    flex: 1;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    text-align: center;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    transition: all 0.2s;
+  }
+
+  .control input:focus {
+    outline: none;
+    background: rgba(255,255,255,0.22);
+    box-shadow: 0 0 0 3px rgba(11,37,69,0.4);
+  }
+
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  .control button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.68,-0.55,0.27,1.55);
+  }
+
+  .control button:hover { background: rgba(11,37,69,0.35); transform: scale(1.15); }
+  .control button:active { transform: scale(0.9); }
+
+  .cgpaSection { text-align: center; margin-bottom: 28px; }
+  .label { font-size: 13px; opacity: 0.7; letter-spacing: 1px; }
+
+  #cgpa {
+    font-size: 4.1rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 20px rgba(11,37,69,0.35);
+  }
+
+  .progressContainer {
+    margin-top: 12px;
+    height: 9px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  .bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    animation: shimmer 2.5s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-150%); }
+    100% { transform: translateX(300%); }
+  }
+
+  .goalBox {
+    background: rgba(255,255,255,0.07);
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  #goal {
+    width: 110px;
+    margin: 0 auto 14px;
+    display: block;
+    padding: 12px 16px;
+    font-size: 1.35rem;
+    text-align: center;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    color: white;
+  }
+
+  #goalResult { font-size: 15px; font-weight: 600; min-height: 24px; margin-bottom: 8px; }
+  #planBox { font-size: 13.5px; line-height: 1.75; opacity: 0.92; white-space: pre-line; background: rgba(0,0,0,0.2); padding: 14px; border-radius: 12px; text-align: left; }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .actions button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    color: #fff;
+  }
+
+  .actions button:hover { transform: translateY(-2px); }
+
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    opacity: 0.55;
+  }
+
+  /* DESKTOP 90% WIDTH + 4 SEM PER ROW */
+  @media (min-width: 1024px) {
+    body { padding: 40px 20px; align-items: center; }
+    .container {
+      width: 92%;
+      max-width: 1180px;
+      padding: 52px 48px;
+    }
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 26px;
+    }
+    .inputBox { padding: 18px 22px; }
+    h1 { font-size: 3rem; }
+    #cgpa { font-size: 5.6rem; }
+    .subtitle { font-size: 17px; }
+    .label { font-size: 14.5px; }
+    #goal { width: 140px; font-size: 1.65rem; }
+    .actions button { font-size: 15.5px; padding: 17px; }
+  }
+
+  @media (max-width: 520px) {
+    .grid { grid-template-columns: 1fr; }
+    .container { padding: 24px 20px; }
+    #cgpa { font-size: 3.4rem; }
+  }
+
+  @media print {
+    body { background: white; color: black; }
+    .container { box-shadow: none; background: white; backdrop-filter: none; border: 1px solid #000; }
+    button, .actions { display: none; }
+    #cgpa { -webkit-text-fill-color: black; }
+    .bar { background: #000; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>CGPA Planner</h1>
+  <div class="subtitle">Plan smarter. Graduate stronger.</div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="cgpaSection">
+    <div class="label">CURRENT CGPA</div>
+    <div id="cgpa">0.00</div>
+    <div class="progressContainer">
+      <div class="bar" id="bar"></div>
+    </div>
+  </div>
+
+  <div class="goalBox">
+    <div class="label">🎯 TARGET CGPA</div>
+    <input type="number" step="0.01" id="goal" placeholder="8.50" oninput="calcGoal()">
+    <div id="goalResult"></div>
+    <div id="planBox"></div>
+  </div>
+
+  <div class="actions">
+    <button onclick="resetAll()">RESET ALL</button>
+    <button onclick="copyPlan()">COPY PLAN</button>
+    <button onclick="downloadImage()">DOWNLOAD PLAN</button>
+  </div>
+
+  <div class="footer">built with precision </div>
+</div>
+
+<script>
+// LOCAL STORAGE + CORE LOGIC (unchanged)
+function saveData() {
+  const semesters = {};
+  for(let i=1; i<=8; i++){
+    const val = document.getElementById(`s${i}`).value;
+    if(val) semesters[`s${i}`] = val;
+  }
+  const goal = document.getElementById("goal").value;
+  localStorage.setItem("cgpaData", JSON.stringify({semesters, goal}));
+}
+
+function loadData() {
+  const saved = localStorage.getItem("cgpaData");
+  if(!saved) return;
+  const data = JSON.parse(saved);
+  for(let i=1; i<=8; i++){
+    const input = document.getElementById(`s${i}`);
+    if(data.semesters[`s${i}`]) input.value = data.semesters[`s${i}`];
+  }
+  if(data.goal) document.getElementById("goal").value = data.goal;
+}
+
+const grid = document.getElementById("grid");
+for(let i=1; i<=8; i++){
+  grid.innerHTML += `
+    <div class="inputBox">
+      <label>Semester ${i}</label>
+      <div class="control">
+        <button onclick="change(${i}, -0.01)">−</button>
+        <input type="number" id="s${i}" step="0.01" min="0" max="10" oninput="calc()">
+        <button onclick="change(${i}, 0.01)">+</button>
+      </div>
+    </div>
+  `;
+}
+
+function change(sem, delta) {
+  const input = document.getElementById(`s${sem}`);
+  let val = parseFloat(input.value) || 0;
+  val = Math.max(0, Math.min(10, val + delta));
+  input.value = val.toFixed(2);
+  calc();
+}
+
+function animateCGPA(finalValue) {
+  const el = document.getElementById("cgpa");
+  let start = 0;
+  const duration = 800;
+  const startTime = performance.now();
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const current = (start + (finalValue - start) * ease).toFixed(2);
+    el.textContent = current;
+    if(progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function calc() {
+  let total = 0, count = 0;
+  for(let i=1; i<=8; i++){
+    const v = parseFloat(document.getElementById(`s${i}`).value);
+    if(!isNaN(v)){ total += v; count++; }
+  }
+  const cgpa = count ? total / count : 0;
+
+  const currentText = document.getElementById("cgpa").textContent;
+  const oldValue = parseFloat(currentText) || 0;
+  if(Math.abs(oldValue - cgpa) > 0.01) animateCGPA(cgpa);
+  else document.getElementById("cgpa").textContent = cgpa.toFixed(2);
+
+  const goal = parseFloat(document.getElementById("goal").value) || 10;
+  const progressPercent = Math.min((cgpa / goal) * 100, 100);
+  document.getElementById("bar").style.width = `${progressPercent}%`;
+
+  calcGoal();
+  saveData();
+}
+
+function calcGoal() {
+  const goal = parseFloat(document.getElementById("goal").value);
+  const resultEl = document.getElementById("goalResult");
+  const planEl = document.getElementById("planBox");
+
+  if(!goal || isNaN(goal)) {
+    resultEl.innerHTML = "";
+    planEl.innerHTML = "";
+    return;
+  }
+
+  let total = 0, done = 0;
+  for(let i=1; i<=8; i++){
+    const v = parseFloat(document.getElementById(`s${i}`).value);
+    if(!isNaN(v)){ total += v; done++; }
+  }
+
+  const remaining = 8 - done;
+  if(remaining <= 0){
+    resultEl.innerHTML = `<span style="color:#4ade80">🎉 All semesters done!</span>`;
+    planEl.innerHTML = "";
+    return;
+  }
+
+  const needed = (goal * 8 - total) / remaining;
+  
+  if(needed > 10){
+    resultEl.innerHTML = `⚠️ <span style="color:#f87171">Impossible</span> — needs ${needed.toFixed(2)}`;
+    planEl.innerHTML = "";
+  } else if(needed <= 0){
+    resultEl.innerHTML = `✅ <span style="color:#4ade80">Already achieved!</span>`;
+    planEl.innerHTML = "";
+  } else {
+    resultEl.innerHTML = `Required average: <strong>${needed.toFixed(2)}</strong>`;
+    let text = "";
+    for(let i = done+1; i<=8; i++){
+      text += `Sem ${i} → <strong>${needed.toFixed(2)}</strong>\n`;
+    }
+    planEl.innerHTML = text;
+  }
+}
+
+function resetAll() {
+  if(!confirm("Reset everything?")) return;
+  for(let i=1; i<=8; i++) document.getElementById(`s${i}`).value = "";
+  document.getElementById("goal").value = "";
+  document.getElementById("bar").style.width = "0%";
+  calc();
+  localStorage.removeItem("cgpaData");
+}
+
+function copyPlan() {
+  const planText = document.getElementById("planBox").innerText;
+  if(!planText) return alert("Nothing to copy yet");
+  navigator.clipboard.writeText(`🎯 My CGPA Plan\nTarget: ${document.getElementById("goal").value}\n\n${planText}`)
+    .then(() => {
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = "COPIED ✓";
+      setTimeout(() => btn.textContent = original, 1800);
+    });
+}
+
+// DOWNLOAD RECEIPT — updated to darkest blue theme
+function downloadImage() {
+  const currentCGPA = document.getElementById("cgpa").textContent;
+  const targetCGPA = document.getElementById("goal").value || "——";
+  const planText = document.getElementById("planBox").innerText || "No plan yet";
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 900;
+  canvas.height = 620;
+  const ctx = canvas.getContext("2d");
+
+  const grad = ctx.createLinearGradient(0, 0, 0, 620);
+  grad.addColorStop(0, "#0a0f1a");
+  grad.addColorStop(1, "#1a2438");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 900, 620);
+
+  ctx.strokeStyle = "#0b2545";           // DARKEST BLUE border
+  ctx.lineWidth = 8;
+  ctx.strokeRect(30, 30, 840, 560);
+
+  ctx.font = "bold 28px Courier New";
+  ctx.fillStyle = "#0b2545";
+  ctx.textAlign = "center";
+  ctx.fillText("╔══════════════════════════════════════╗", 450, 85);
+  ctx.fillText("║               CGPA PLAN              ║", 450, 120);
+  ctx.fillText("╚══════════════════════════════════════╝", 450, 155);
+
+  ctx.font = "18px Courier New";
+  ctx.fillStyle = "#6b8ab8";
+  ctx.fillText("DATE: " + new Date().toLocaleDateString('en-IN'), 450, 200);
+
+  ctx.font = "bold 42px Courier New";
+  ctx.fillStyle = "#0b2545";
+  ctx.fillText("CURRENT CGPA → " + currentCGPA, 450, 270);
+  ctx.fillText("──────────────────────────────────────", 450, 310);
+  ctx.fillText("TARGET  CGPA → " + targetCGPA, 450, 360);
+  ctx.fillText("──────────────────────────────────────", 450, 400);
+
+  ctx.font = "22px Courier New";
+  ctx.fillStyle = "#c8d6ff";
+  const lines = planText.split("\n");
+  let y = 440;
+  lines.forEach(line => {
+    if (line.trim()) {
+      ctx.fillText(line, 450, y);
+      y += 34;
+    }
+  });
+
+  ctx.fillStyle = "#0b2545";
+  ctx.fillText("──────────────────────────────────────", 450, 580);
+  ctx.font = "18px Courier New";
+  ctx.fillText(" PRINTED FOR ETERNITY", 450, 610);
+
+  const link = document.createElement("a");
+  link.download = "CGPA_Receipt_" + currentCGPA + ".png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+loadData();
+calc();
+</script>
+</body>
+</html>
+.
