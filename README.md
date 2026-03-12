@@ -18,9 +18,13 @@ Built with pure HTML + CSS + JavaScript — no frameworks, no build step, just o
 
 ### 📸 Screenshots
 
-![Desktop View](https://via.placeholder.com/1200x600/0b2545/ffffff?text=Desktop+View)  
-![Mobile View](https://via.placeholder.com/600x800/0b2545/ffffff?text=Mobile+View)  
-![Receipt Download](https://via.placeholder.com/900x620/0b2545/ffffff?text=Downloaded+Receipt+PNG)
+![Desktop View](screenshots/desktop.png)
+
+![Mobile View](screenshots/phone.png)
+
+![Receipt Download](screenshots/CGPA_Receipt_8.85.png)
+
+---
 
 ---
 
@@ -69,7 +73,10 @@ Built with pure HTML + CSS + JavaScript — no frameworks, no build step, just o
 cgpa-vibe/
 ├── index.html          ← The entire app (just one file!)
 ├── README.md
-└── (optional) screenshots/
+└── screenshots/
+    ├── CGPA_Receipt_8.85.png
+    ├── desktop.png
+    └── phone.png
 ```
 
 ---
@@ -89,13 +96,10 @@ This project is open-source under the **MIT License** — feel free to fork, mod
 
 ---
 
-### ❤️ Made with Passion
-
-Built live with Grok (xAI) — level 10 perfection.
+### Made with ⭐ 
 
 **Star the repo** if it helped you plan your semesters better! ⭐
-**Made for students, by students.**  
+**Made for students, by a student.**  
 Now go get that 9.0+ CGPA 🔥
 ```
 
----
